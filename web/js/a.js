@@ -70,11 +70,14 @@ function aConstructor()
   // Utility: console.log wrapper prevents JS errors if we leave an apostrophe.log call hanging out in our code someplace
   this.setupLogger = function() {
     if ((this.debug === true) && window.console && console.log) {
-      return console.log;
+      return function(output) {
+          console.log(output);
+      };
     }
 
-    return function() {};
+    return function(output) {};
   }
+  
   this.log = this.setupLogger();
 
   // apostrophe.debug() -- displays any debug messages stored in the debugBuffer and empties the buffer
