@@ -36,6 +36,7 @@ class BaseaVideoSlotComponents extends aSlotComponents
     $this->options['title'] = $this->getOption('title', false);
     $this->options['description'] = $this->getOption('description', false);
     $this->options['itemTemplate'] = $this->getOption('itemTemplate', 'defaultItem');
+    $this->options['autoplay'] = $this->getOption('autoplay', false);
 
     // Behave well if it's not set yet!
     if (!count($this->slot->MediaItems))
@@ -56,7 +57,14 @@ class BaseaVideoSlotComponents extends aSlotComponents
           "resizeType" => $this->options['resizeType'],
           // Upsampling video is OK (and commonplace)
           'forceScale' => true));
-      $this->embed = $this->item->getEmbedCode($this->dimensions['width'], $this->dimensions['height'], $this->dimensions['resizeType'], $this->dimensions['format'], false);
+      if ($this->getOption('thumbnailOnly'))
+      {
+        $this->embed = '<img src="' . aHtml::entities($this->item->getImgSrcUrl($this->dimensions['width'], $this->dimensions['height'], $this->dimensions['resizeType'], $this->dimensions['format'], false)) . '" />';
+      }
+      else
+      {
+        $this->embed = $this->item->getEmbedCode($this->dimensions['width'], $this->dimensions['height'], $this->dimensions['resizeType'], $this->dimensions['format'], false, 'opaque', $this->options['autoplay']);
+      }
     }
     $this->stretch16x9 = false;
     if ($this->item)
